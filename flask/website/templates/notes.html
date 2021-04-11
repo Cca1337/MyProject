@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Notes{% endblock %}
+
+{% block content %}
+<br>
+<h2 align="center" class="skuska">Notes</h2>
+<ul class="list-group list-group-flush " id="notes">
+
+    {% for note in user.notes %}
+    <li class="list-group-item">
+       <span class="skuska zhora">{{ note.data }}</span>
+       <div class="justify-content-end moj">
+            <span class="badge">{{(note.date).strftime("%d-%B-%Y, %H:%M:%S")}}</span>
+            <a class="btn btn-primary" href="/update/{{ note.id }}" role="button">Edit</a>&ensp;
+            <button type="button" class="btn btn-primary" onClick="deleteNote({{ note.id }})">
+               <span aria-hidden="true">&times;</span>
+            </button>
+       </div>
+    </li>
+    {% endfor %}
+</ul>
+<br>
+<form method="POST">
+    <textarea name="note"
+              id="note"
+              placeholder="Enter you note"
+              class="form-control skuska"></textarea>
+    <br>
+    <div align="center">
+        <button type="submit" class="btn btn-primary">Add Note</button>
+    </div>
+</form>
+<br />
+{% endblock %}

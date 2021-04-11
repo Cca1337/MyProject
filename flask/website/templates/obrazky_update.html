@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Obrazky{% endblock %}
+
+{% block content %}
+
+<br>
+<button class="btn btn-primary"><a style="color:white" href="/upload"> Back</a></button>
+<br>
+<h2 align="center" class="skuska">Uploads</h2>
+<ul class="list-group list-group-flush " id="pictures">
+
+    {% for obrazok in user.obrazky %}
+    <li class="list-group-item">
+        <div class="row moj">
+             <div class="col-sm">
+                   <img src="{{ url_for('static', filename='/Uploads/{}'.format(obrazok.name)) }}" style="width: 64px">
+             </div>
+             <div class="col-sm">
+                <small class="text-muted">{{ obrazok.name }}</small>
+             </div>
+             <div class="col-sm">
+                 <small class="text-muted">{{ obrazok.text }}</small>
+             </div>
+
+             <div class="col-sm">
+                <div class="justify-content-end moj">
+                    <span class="badge">{{(obrazok.pic_date).strftime("%d-%B-%Y, %H:%M:%S")}}</span>
+                    <button type="button" class="btn btn-primary" onClick="deletePic({{ obrazok.id }})">
+                    <span aria-hidden="true">&times;</span>
+                    </button>  &nbsp
+                    <a href="/return-files/{{obrazok.name}}" target="blank"><button class='btn btn-primary'>Download</button></a>
+                </div>
+            </div>
+        </div>
+    </li>
+
+    {% endfor %}
+</ul>
+
+{% endblock %}
