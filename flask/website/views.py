@@ -19,7 +19,7 @@ views = Blueprint('views', __name__)
 
 
 @views.route('/')
-@login_required
+#@login_required
 def home():
 
     return render_template("home.html", user=current_user)
@@ -42,28 +42,28 @@ def delete_note():
 
 
 @views.route('/3D-prints')
-@login_required
+#@login_required
 def gallery():
 
     return render_template("3d-prints.html", user=current_user)
 
 
 @views.route('/videos')
-@login_required
+#@login_required
 def videos():
 
     return render_template("videos.html", user=current_user)
 
 
 @views.route('/carousel')
-@login_required
+#@login_required
 def carousel():
 
     return render_template('carousel.html', user=current_user)
 
 
 @views.route('/sony')
-@login_required
+#@login_required
 def sony():
 
     return render_template('sony.html', user=current_user)
@@ -103,7 +103,7 @@ def notes():
 
 
 @views.route('/weather', methods=["GET", "POST"])
-@login_required
+#@login_required
 def weather():
 
     if request.method == "POST":
@@ -124,7 +124,7 @@ def weather():
 
 
 @views.route('/scrape', methods=["GET", "POST"])
-@login_required
+#@login_required
 def scrape():
 
     if request.method == "POST":
@@ -146,7 +146,7 @@ def scrape():
 
 
 @views.route('/face_detection', methods=["POST", "GET"])
-@login_required
+#@login_required
 def face_detection():
 
     if request.method == "POST":
@@ -161,7 +161,7 @@ def face_detection():
 
 
 @views.route('/eye_detection', methods=["POST", "GET"])
-@login_required
+#@login_required
 def eye_detection():
     if request.method == "POST":
         boolean = True
@@ -175,7 +175,7 @@ def eye_detection():
 
 
 @views.route('/video_feed')
-@login_required
+#@login_required
 def video_feed():
     try:
         return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
@@ -186,7 +186,7 @@ def video_feed():
 
 
 @views.route('/video_feed1')
-@login_required
+#@login_required
 def video_feed1():
     try:
         return Response(generate1(), mimetype='multipart/x-mixed-replace; boundary=frame')
@@ -197,7 +197,7 @@ def video_feed1():
 
 
 @views.route('/stocks_prediction', methods=["POST", "GET"])
-@login_required
+#@login_required
 def stocks_predicton():
 
     if request.method == "POST":
@@ -216,6 +216,9 @@ def stocks_predicton():
         elif len(company) > 7 or len(company) < 2:
             flash(f"You put [{company}] as a company ticker name which doesnt work", category='error')
 
+        elif days == "":
+            flash(f"You cant get the prediction for empty field", category='error')
+
         else:
             prediction, last_value = stock_price_prediction(days, company)
             link = f"{company}_{days}_prediction.png"
@@ -226,7 +229,7 @@ def stocks_predicton():
 
 
 @views.route('/vysledok')
-@login_required
+#@login_required
 def vysledok():
 
     return render_template('vysledok.html', user=current_user)

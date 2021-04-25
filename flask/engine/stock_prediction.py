@@ -158,19 +158,16 @@ def stock_price_prediction(days, company):
     #plt.grid(True)
     plt.legend()
 
-    if os.path.isfile(f'./website/static/Graphs/{company}_{days}_prediction.png'):
 
-        prediction = round(ibaPredictions.values[-1], 3)
+    ulozenka = plt.savefig(f'./website/static/Graphs/{company}_{days}_prediction.png', bbox_inches="tight")
 
-        return prediction, last_value
+    plt.clf()
+    plt.cla()
+    plt.close(ulozenka)
 
-    else:
+    prediction = round(ibaPredictions.values[-1], 3)
 
-        ulozenka = plt.savefig(f'./website/static/Graphs/{company}_{days}_prediction.png')
-        #plt.show()
-        prediction = round(ibaPredictions.values[-1], 3)
-
-        return prediction, last_value
+    return prediction, last_value
 
 
 #stock_price_prediction(days, company)

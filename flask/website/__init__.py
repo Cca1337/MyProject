@@ -2,8 +2,10 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
+from flask_admin import Admin
 import os
 from logging import FileHandler, WARNING
+import flask_monitoringdashboard as dashboard
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -15,7 +17,7 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpeg', 'gif'}
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = b"YOURsuperSECRETKEY"
+    app.config['SECRET_KEY'] = b"YOURSECRETKEYGOESHERE"
     app.static_folder = 'static'
 
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
@@ -38,13 +40,26 @@ def create_app():
     app.register_blueprint(auth, url_prefix='/')
 
     # creating database if doesnt exist
-    from .models import User, Note, Obrazok
+    from .models import User, Note, Obrazok, Role, MyModelView, MyAdminIndexView
 
     create_database(app)
+
+# CREATE MONITORING DASHBOARD
+    dashboard.config.init_from(file=f'{APP_ROOT}/static/config/config.cfg')
+    dashboard.bind(app)
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
+
+
+    admin = Admin(app, index_view=MyAdminIndexView())
+
+    admin.add_view(MyModelView(User, db.session))
+    admin.add_view(MyModelView(Role, db.session))
+    admin.add_view(MyModelView(Note, db.session))
+    admin.add_view(MyModelView(Obrazok, db.session))
+
 
     @login_manager.user_loader
     def load_user(id):

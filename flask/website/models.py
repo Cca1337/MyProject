@@ -1,5 +1,9 @@
 from . import db
-from flask_login import UserMixin
+from flask import redirect, url_for
+from flask_login import UserMixin, current_user
+from flask_admin import AdminIndexView
+from flask_admin.contrib.sqla import ModelView
+
 
 
 class Obrazok(db.Model):
@@ -25,3 +29,36 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(150))
     notes = db.relationship('Note')
     obrazky = db.relationship('Obrazok')
+    roles = db.relationship('Role')
+
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    name = db.Column(db.String(100), unique=True)
+    description = db.Column(db.String(100), unique=True)
+
+
+# show all dbs
+class MyModelView(ModelView):
+    def is_accessible(self):
+        try:
+            kontrola = User.query.get(current_user.id).roles
+
+        except AttributeError as err:
+            print(err)
+        return current_user.is_authenticated and kontrola
+
+# show db attributes if current user is authorized else redirect to home screen
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('views.home'))
+
+# HOME ADMIN SCREEN
+class MyAdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        try:
+            kontrola = User.query.get(current_user.id).roles
+
+        except AttributeError as err:
+            print(err)
+        return current_user.is_authenticated and kontrola
+
