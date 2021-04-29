@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, Response, send_file
 from flask_login import login_required, current_user
 from .models import Note, Obrazok
-from . import db, allowed_file
+from . import db, allowed_file, cache
 import json
 from engine.weather_forecast_API import get_weather_api
 from engine.weather_forecast import get_weather_scrape
@@ -19,6 +19,7 @@ views = Blueprint('views', __name__)
 
 
 @views.route('/')
+@cache.cached(timeout=300)
 #@login_required
 def home():
 
@@ -42,6 +43,7 @@ def delete_note():
 
 
 @views.route('/3D-prints')
+@cache.cached(timeout=300)
 #@login_required
 def gallery():
 
@@ -49,6 +51,7 @@ def gallery():
 
 
 @views.route('/videos')
+@cache.cached(timeout=300)
 #@login_required
 def videos():
 
@@ -56,6 +59,7 @@ def videos():
 
 
 @views.route('/carousel')
+@cache.cached(timeout=300)
 #@login_required
 def carousel():
 
@@ -63,6 +67,7 @@ def carousel():
 
 
 @views.route('/sony')
+@cache.cached(timeout=300)
 #@login_required
 def sony():
 
@@ -305,3 +310,11 @@ def return_files(filename):
 
     file_path = UPLOAD_FOLDER + filename
     return send_file(file_path, as_attachment=True)
+
+import random
+
+@views.route("/casovac")
+@cache.cached(timeout=10)
+def casovac():
+    _ = random.randint(3,9)
+    return str(_)

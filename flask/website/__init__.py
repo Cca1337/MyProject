@@ -6,6 +6,7 @@ from flask_admin import Admin
 import os
 from logging import FileHandler, WARNING
 import flask_monitoringdashboard as dashboard
+from flask_caching import Cache
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -14,6 +15,12 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static', 'Uploads')
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpeg', 'gif'}
 
+config_cache = {
+    "DEBUG": True,          
+    "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
+    "CACHE_DEFAULT_TIMEOUT": 300}
+
+cache = Cache(config=config_cache)
 
 def create_app():
     app = Flask(__name__)
@@ -60,6 +67,7 @@ def create_app():
     admin.add_view(MyModelView(Note, db.session))
     admin.add_view(MyModelView(Obrazok, db.session))
 
+    cache.init_app(app)
 
     @login_manager.user_loader
     def load_user(id):
